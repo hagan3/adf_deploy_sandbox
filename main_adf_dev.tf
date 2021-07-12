@@ -5,6 +5,10 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "=2.46.0"
     }
+	databricks = {
+		source = "databrickslabs/databricks"
+		version = "0.2.5"
+	}
   }
 }
 
@@ -14,11 +18,621 @@ provider "azurerm" {
   subscription_id   = var.subscription-id
 }
 
+
 # Create resource group, name and location variables located in variables_adf_dev.tf
 resource "azurerm_resource_group" "resource-group-dev" {
   name     = var.resource-group-dev
   location = var.resource-location
 }
+
+################################ Databricks ################################
+/*
+Code to create a new databricks workspace
+*/
+resource "azurerm_databricks_workspace" "resource-databricks-dev" {
+  name                = "databricksdev"
+  resource_group_name = var.resource-group-dev
+  location            = var.resource-location
+  sku                 = "trial"
+}
+
+provider "databricks" {
+  #azure_workspace_resource_id = azurerm_databricks_workspace.resource-databricks-dev.id
+  host = "https://adb-4569210438403194.14.azuredatabricks.net"
+  token = "dapicc8de2a367c8f11be1aaaa3ce1d5423f"
+}
+
+/*
+Cluster computing configuration to be updated as required.
+*/
+resource "databricks_cluster" "cluster-dev" {
+  cluster_name            = "databricksclustersdev"
+  spark_version           = "7.3.x-scala2.12"
+  node_type_id            = "Standard_DS3_v2"
+  autotermination_minutes = 20
+  autoscale {
+    min_workers = 1
+    max_workers = 4
+  }
+  library {
+    pypi {
+        package = "scikit-learn==0.23.2"
+        }
+    }
+  library {
+    pypi {
+        package = "adal==1.2.5"
+        }
+    }	
+  library {
+  	pypi {
+  		package = "add-parent-path==0.1.11"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "async-generator==1.10"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "attrs==20.3.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "azure-appconfiguration==1.1.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "azure-batch==9.0.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "azure-common==1.1.25"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "azure-core==1.8.1"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "azure-cosmos==3.2.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "azure-datalake-store==0.0.50"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "azure-functions-devops-build==0.0.22"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "azure-graphrbac==0.61.1"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "azure-identity==1.5.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "azure-keyvault==4.1.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "azure-keyvault-secrets==4.2.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "azure-keyvault-administration==4.0.0b3"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "azure-loganalytics==0.1.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "azure-mgmt-datafactory==0.15.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "azure-multiapi-storage==0.4.1"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "azure-nspkg==3.0.2"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "azure-storage-blob==12.5.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "azure-storage-common==1.4.2"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "azure-synapse-accesscontrol==0.2.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "azure-synapse-spark==0.2.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "backcall==0.2.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "bleach==3.2.1"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "certifi==2020.12.5"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "cffi==1.14.4"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "chardet==3.0.4"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "click==7.1.2"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "conda-merge==0.1.5"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "cryptography==3.3.1"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "cycler==0.10.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "databricks-cli==0.14.1"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "decorator==4.4.2"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "defusedxml==0.6.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "entrypoints==0.3"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "idna==2.10"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "importlib-metadata==2.0.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "iniconfig==1.1.1"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "ipykernel==5.3.4"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "ipython==7.18.1"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "ipython-genutils==0.2.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "isodate==0.6.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "jedi==0.17.2"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "Jinja2==2.11.2"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "jsonschema==3.2.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "MarkupSafe==1.1.1"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "mistune==0.8.4"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "msal==1.11.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "msal-extensions~=0.3.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "msrest==0.6.19"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "msrestazure==0.6.4"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "nbclient==0.5.1"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "nbconvert==6.0.7"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "nbformat==5.0.8"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "nest-asyncio==1.4.3"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "numpy==1.19.2"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "oauthlib==3.1.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "olefile==0.46"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "packaging==20.7"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "pandas==1.0.1"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "pandocfilters==1.4.3"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "parso==0.7.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "pathlib2==2.3.5"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "patsy==0.5.1"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "pexpect==4.8.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "pickleshare==0.7.5"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "Pillow==8.1.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "pip==21.1.1"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "pluggy==0.13.1"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "portalocker==1.7.1"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "prompt-toolkit==3.0.7"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "ptyprocess==0.6.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "py==1.10.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "pyarrow==3.0.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "pycparser==2.20"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "Pygments==2.7.1"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "PyJWT==2.0.1"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "pyodbc==4.0.30"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "pyparsing==2.4.7"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "pyrsistent==0.17.3"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "pytest==6.2.1"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "python-dateutil==2.8.1"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "pytz==2020.5"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "PyYAML==5.3.1"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "pyzmq==19.0.2"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "requests==2.25.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "requests-oauthlib==1.3.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "scipy==1.5.2"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "six==1.15.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "SQLAlchemy==1.3.19"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "statsmodels==0.12.1"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "stdlogging==0.16"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "tabulate==0.8.7"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "testpath==0.4.4"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "toml==0.10.2"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "tornado==6.0.4"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "traitlets==5.0.4"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "urllib3==1.26.2"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "vsts==0.1.25"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "wcwidth==0.2.5"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "webencodings==0.5.1"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "wheel==0.35.1"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "xlrd==1.2.0"
+  		}
+  	}
+  library {
+  	pypi {
+  		package = "zipp==3.4.0"
+  		}
+  	}
+}
+
+/* Code to add a user to databricks workspace
+resource "databricks_scim_user" "admin" {
+  user_name    = "admin@example.com"
+  display_name = "Admin user"
+  set_admin    = true
+  default_roles = []
+}
+*/
+
+resource "databricks_notebook" "notebook" {
+  content = base64encode("print('Welcome to your Python notebook')")
+  path = "/Shared/python_notebook"
+  overwrite = false
+  mkdirs = true
+  language = "PYTHON"
+  format = "SOURCE"
+}
+
+resource "databricks_notebook" "ml_forecasting_notebook" {
+  content = base64encode(file("/Notebooks/auto-ml-forecasting-function.py"))
+  path = "/Shared/auto-ml-forecasting-function"
+  overwrite = false
+  mkdirs = true
+  language = "PYTHON"
+  format = "SOURCE"
+}
+
+resource "databricks_notebook" "eda_notebook" {
+  content = base64encode(file("/Notebooks/EDA.py"))
+  path = "/Shared/EDA"
+  overwrite = false
+  mkdirs = true
+  language = "PYTHON"
+  format = "SOURCE"
+}
+
+/*
+TO ADD
+Additional Notebooks
+Job
+*/
+
 
 ################################ Storage/Data Factory ################################
 
@@ -253,6 +867,7 @@ resource "azurerm_data_factory_linked_service_key_vault" "adf_link_key_vault" {
   data_factory_name   = azurerm_data_factory.adf_test.name
   key_vault_id        = azurerm_key_vault.vault.id
 }
+
 
 ################################ ADF Datasets ################################
 
