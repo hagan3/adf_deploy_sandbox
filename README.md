@@ -72,10 +72,10 @@ dbutils.fs.mount(
 
 TODO: Automate databricks secret scope creation, cluster creation, and storage mount
 
-## ReadMe for Machine Learning Industrialization Component
+## ReadMe for Machine Learning Industrialization Components
 
 ## main_adf_dev.tf
-Main document for setting up azure data factory terraform resources.
+Main document for setting up azure data factory and data bricks terraform resources.
 
 Resource Setup:
 Configuring terraform and required providers, subscription ID, resource name and locations.
@@ -125,6 +125,14 @@ Pipelines:
 - adfpipelineremovealphanumeric: pipeline to copy data and execute dataflow to remove alphanumeric characters, blob source and SQL server sink
 - adfpipelinecopynewfilesbylastmodified: pipeline to copy files using Azure Blob Storage read settings source, and sink using Azure Blob Write Settings
 - adftriggerschedule: schedule to adjust frequency of pipeline execution, currently set to every 5 days
+
+Databricks:
+- resource-databricks-dev: Creates the Azure Databricks Workspace
+- provider: Databricks provider should be updated to align with authentication standards 
+- cluster-dev: Creates the Databricks Cluster with preloaded libraries
+- ml_forecasting_notebook: Python notebooks for experimentation
+- eda_notebook: Python notebooks for experimentation
+
 
 ## variables_adf_dev.tf
 All variables are defined within this file including:
